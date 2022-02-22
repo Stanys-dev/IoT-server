@@ -10,8 +10,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BufferDecoderMiddleware } from './common/middlewares/bufferDecoder.middleware';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import unique_id from 'unique-id-key'
-import {join} from 'path'
+import unique_id from 'unique-id-key';
+import { join } from 'path';
 
 const envFilePath: string = getEnvPath(join(__dirname, '../common/envs'));
 const configService = new ConfigService();

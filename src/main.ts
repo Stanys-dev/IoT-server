@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import {
+  ExpressAdapter,
+  NestExpressApplication,
+} from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -11,7 +14,7 @@ import http from 'http';
 import https from 'https';
 import { join } from 'path';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import {version} from '../package.json'
+import { version } from '../package.json';
 
 async function bootstrap() {
   const config = new ConfigService();
@@ -25,7 +28,9 @@ async function bootstrap() {
     AppModule,
     new ExpressAdapter(server),
   );
-  expressApp.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  expressApp.useGlobalPipes(
+    new ValidationPipe({ transform: true, whitelist: true }),
+  );
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('IoT server API')
@@ -36,8 +41,12 @@ async function bootstrap() {
   SwaggerModule.setup('api', expressApp, document);
 
   await expressApp.init();
-  http.createServer(server).listen(config.get('HTTP_PORT'), config.get('HOSTNAME'));
-  https.createServer(httpsOptions, server).listen(config.get('HTTPS_PORT'), config.get('HOSTNAME'));
+  http
+    .createServer(server)
+    .listen(config.get('HTTP_PORT'), config.get('HOSTNAME'));
+  https
+    .createServer(httpsOptions, server)
+    .listen(config.get('HTTPS_PORT'), config.get('HOSTNAME'));
 
   // const mqttApp = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
   //   transport: Transport.MQTT,
