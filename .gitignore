@@ -37,3 +37,10 @@ lerna-debug.log*
 # Env
 /src/common/envs/development.env
 /src/common/envs/production.env
+
+# Terraform
+!/deployment/variables.tf
+!/deployment/.terraform
+!/deployment/.terraform.lock.hcl
+!/deployment/terraform.tfstate
+!/deployment/terraform.tfstate.backup
