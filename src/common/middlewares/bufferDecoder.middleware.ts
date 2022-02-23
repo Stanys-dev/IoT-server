@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { StringDecoder } from 'string_decoder';
-import * as cbor from 'cbor';
+import cbor from 'cbor';
 
 @Injectable()
 export class BufferDecoderMiddleware implements NestMiddleware {

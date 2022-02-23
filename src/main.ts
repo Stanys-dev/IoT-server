@@ -6,8 +6,6 @@ import {
 } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import unique_id from 'unique-id-key';
 import fs from 'fs';
 import express from 'express';
 import http from 'http';
@@ -47,20 +45,6 @@ async function bootstrap() {
   https
     .createServer(httpsOptions, server)
     .listen(config.get('HTTPS_PORT'), config.get('HOSTNAME'));
-
-  // const mqttApp = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-  //   transport: Transport.MQTT,
-  //   options: {
-  //     url: 'mqtt://test.mosquitto.org',
-  //     clean: false,
-  //     clientId: unique_id.RandomString(11, 'uppercase'),
-  //     protocol: 'mqtt',
-  //     port: 1883,
-  //     rejectUnauthorized: false
-  //   },
-  // });
-  //
-  // await mqttApp.listen();
 }
 
 bootstrap();

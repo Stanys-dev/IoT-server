@@ -9,9 +9,8 @@ import { getEnvPath } from './common/helpers/env.helper';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BufferDecoderMiddleware } from './common/middlewares/bufferDecoder.middleware';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import unique_id from 'unique-id-key';
 import { join } from 'path';
+import { MqttModule } from './mqtt/mqtt.module';
 
 const envFilePath: string = getEnvPath(join(__dirname, '../common/envs'));
 const configService = new ConfigService();
@@ -22,22 +21,9 @@ const configService = new ConfigService();
       envFilePath,
       isGlobal: true,
     }),
-    // ClientsModule.register([
-    //   {
-    //     name: 'Device',
-    //     transport: Transport.MQTT,
-    //     options: {
-    //       url:  'mqtt://test.mosquitto.org',
-    //       clean:false,
-    //       clientId: unique_id.RandomString(11, 'uppercase'),
-    //       protocol: 'mqtt',
-    //       port:1883,
-    //       rejectUnauthorized:false
-    //     },
-    //   },
-    // ]),
     MongooseModule.forRoot(configService.get('DB_URL')),
     RecordsModule,
+    MqttModule,
   ],
   controllers: [],
   providers: [],

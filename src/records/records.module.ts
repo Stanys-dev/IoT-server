@@ -10,5 +10,6 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     MongooseModule.forFeature([{ name: Record.name, schema: RecordSchema }]),
   ],
+  exports: [RecordsService],
 })
 export class RecordsModule {}
