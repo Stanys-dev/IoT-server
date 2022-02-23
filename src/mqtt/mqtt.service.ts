@@ -43,7 +43,6 @@ export class MqttService {
   }
 
   async handleMessage(payload: any, topic: string) {
-    console.log(this.decodePayload(payload));
 
     let response = await this.topicsHandler(topic, this.decodePayload(payload));
 
