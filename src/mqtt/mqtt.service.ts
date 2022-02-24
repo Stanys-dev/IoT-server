@@ -3,47 +3,53 @@ import mqtt from 'mqtt';
 import unique_id from 'unique-id-key';
 import cbor from 'cbor';
 import { RecordsService } from '../records/records.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MqttService {
-  client: mqtt.MqttClient;
+  mqttClient: mqtt.MqttClient;
+  configService = new ConfigService();
 
   constructor(private recordsService: RecordsService) {
-    this.client = mqtt.connect('mqtt://test.mosquitto.org', {
+    this.mqttClient = mqtt.connect(this.configService.get('MQTT_URL'), {
       clean: false,
       clientId: unique_id.RandomString(11, 'uppercase'),
       protocol: 'mqtt',
       port: 1883,
-      rejectUnauthorized: false,
+      username: this.configService.get('MQTT_USERNAME'),
+      password: this.configService.get('MQTT_PASSWORD'),
     });
 
-    this.client.on('message', async (topic: string, payload: any) => {
+    this.mqttClient.on('message', async (topic: string, payload: any) => {
       await this.handleMessage(payload, topic);
     });
 
-    this.client.on('connect', () => console.log('MQTT client connected'));
+    this.mqttClient.on('connect', () => console.log('MQTT client connected'));
 
-    this.client.on('disconnect', () => console.log('MQTT client disconnected'));
+    this.mqttClient.on('disconnect', () =>
+      console.log('MQTT client disconnected'),
+    );
 
-    this.client.on('error', (e) => console.error(e));
+    this.mqttClient.on('error', (e) => console.error(e));
 
-    this.client.on('close', () => console.log('MQTT client closed'));
+    this.mqttClient.on('close', () => console.log('MQTT client closed'));
 
-    this.client.on('end', () => console.log('MQTT client ended'));
+    this.mqttClient.on('end', () => console.log('MQTT client ended'));
 
-    this.client.on('reconnect', () => console.log('MQTT client reconnected'));
+    this.mqttClient.on('reconnect', () =>
+      console.log('MQTT client reconnected'),
+    );
 
-    this.client.on('offline', () => console.log('MQTT client offline'));
+    this.mqttClient.on('offline', () => console.log('MQTT client offline'));
 
-    this.client.on('outgoingEmpty', () =>
+    this.mqttClient.on('outgoingEmpty', () =>
       console.log('MQTT client outgoingEmpty'),
     );
 
-    this.client.subscribe('records');
+    this.mqttClient.subscribe('records');
   }
 
   async handleMessage(payload: any, topic: string) {
-
     let response = await this.topicsHandler(topic, this.decodePayload(payload));
 
     if (!response) return;
@@ -82,6 +88,6 @@ export class MqttService {
   }
 
   publishMessage(topic, data) {
-    this.client.publish(topic, this.encodePayload(data), { qos: 1 });
+    this.mqttClient.publish(topic, this.encodePayload(data), { qos: 1 });
   }
 }
