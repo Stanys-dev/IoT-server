@@ -2,28 +2,31 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { RecordsDto } from './dtos/records.dto';
 import {
-  Ctx,
-  MessagePattern,
-  MqttContext,
-  Payload,
-} from '@nestjs/microservices';
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Record } from './schemas/records.schema';
 
+@ApiTags('Records')
 @Controller('records')
 export class RecordsController {
-  constructor(private recordsService: RecordsService) {}
+  constructor(private recordsService: RecordsService) {
+  }
 
   @Post()
+  @ApiBody({ type: RecordsDto })
+  @ApiCreatedResponse({ type: Record })
+  @ApiBadRequestResponse()
   saveRecords(@Body() record: RecordsDto) {
     return this.recordsService.saveRecords(record);
   }
 
   @Get('latest')
+  @ApiOkResponse({ type: Record })
   getLatestRecord() {
     return this.recordsService.getLatestRecord();
-  }
-
-  @MessagePattern()
-  getNotifications(@Payload() data: number[], @Ctx() context: MqttContext) {
-    console.log(`Topic: ${context.getTopic()}`);
   }
 }

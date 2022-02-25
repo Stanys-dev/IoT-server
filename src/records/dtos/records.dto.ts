@@ -1,15 +1,20 @@
 import { IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RecordsDto {
   @IsNumber()
-  altitude: Number;
+  @ApiProperty({ type: Number, example: 212.15151, required: true })
+  altitude: number;
 
   @IsNumber()
-  latitude: Number;
+  @ApiProperty({ type: Number, example: 448.15151, required: true })
+  latitude: number;
 
   @IsNumber()
-  longitude: Number;
+  @ApiProperty({ type: Number, example: 44.15151, required: true })
+  longitude: number;
 
   @IsNumber()
-  timestamp: Number;
+  @ApiProperty({ type: Number, example: 1645766667042, required: true })
+  timestamp: number;
 }

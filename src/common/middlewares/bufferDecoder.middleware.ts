@@ -9,17 +9,19 @@ export class BufferDecoderMiddleware implements NestMiddleware {
     const decoder = new StringDecoder('hex');
     let buffer = '';
 
-    req.on('data', function (data) {
+    req.on('data', function(data) {
       buffer += decoder.write(data);
     });
 
-    req.on('end', function () {
+    req.on('end', function() {
       buffer += decoder.end();
 
-      req.body = cbor.decodeFirstSync(
-        // @ts-ignore
-        buffer instanceof Buffer ? buffer : Buffer.from(buffer, 'hex'),
-      );
+      if (buffer) {
+        req.body = cbor.decodeFirstSync(
+          // @ts-ignore
+          buffer instanceof Buffer ? buffer : Buffer.from(buffer, 'hex'),
+        );
+      }
       next();
     });
   }

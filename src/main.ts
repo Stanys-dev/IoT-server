@@ -36,7 +36,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(expressApp, swaggerConfig);
-  SwaggerModule.setup('api', expressApp, document);
+  SwaggerModule.setup('docs', expressApp, document);
 
   await expressApp.init();
   http
